@@ -21,7 +21,7 @@
     NSLog( @"Using Shelley to select views with selector: %@", selector );	
     
     Shelley *shelley = [Shelley withSelectorString:selector];
-    return [shelley selectFromViews:[[UIApplication sharedApplication] windows]];
+    return [shelley selectFrom:[[UIApplication sharedApplication] keyWindow]];
 }
 
 

@@ -7,3 +7,5 @@ dist
 *.perspective
 *.perspectivev3
 xcuserdata
+
+.DS_Store

@@ -71,20 +71,37 @@ module FrankHelper
   
   
   def frankly_map( query, method_name, *method_args )
-    operation_map = {
-      :method_name => method_name,
-      :arguments => method_args,
-    }
-    selector_engine = Frank::Cucumber::FrankHelper.selector_engine || 'uiquery' # default to UIQuery for backwards compatibility
-    res = post_to_uispec_server( 'map', :query => query, :operation => operation_map, :selector_engine => selector_engine )
-    res = JSON.parse( res )
-    if res['outcome'] != 'SUCCESS'
-      raise "frankly_map #{query} #{method_name} failed because: #{res['reason']}\n#{res['details']}"
+    results = []
+    
+    begin
+      Timeout::timeout(5) do
+        while results.empty?
+            results = frankly_map!( query, method_name, *method_args )
+        end
+      end
+    rescue
     end
+    
+    sleep 0.5
 
-    res['results']
+    results
   end
 
+  def frankly_map!( query, method_name, *method_args )
+      operation_map = {
+          :method_name => method_name,
+          :arguments => method_args,
+      }
+      selector_engine = Frank::Cucumber::FrankHelper.selector_engine || 'uiquery' # default to UIQuery for backwards compatibility
+      res = post_to_uispec_server( 'map', :query => query, :operation => operation_map, :selector_engine => selector_engine )
+      res = JSON.parse( res )
+      if res['outcome'] != 'SUCCESS'
+          raise "frankly_map #{query} #{method_name} failed because: #{res['reason']}\n#{res['details']}"
+      end
+      
+      res['results']
+  end
+    
   def frankly_dump
     res = get_to_uispec_server( 'dump' )
     puts JSON.pretty_generate(JSON.parse(res)) rescue puts res #dumping a super-deep DOM causes errors

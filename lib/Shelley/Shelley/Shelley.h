@@ -20,6 +20,5 @@
 - (id)initWithSelectorString:(NSString *)selectorString;
 
 - (NSArray *) selectFrom:(UIView *)rootView;
-- (NSArray *) selectFromViews:(NSArray *)views;
 
 @end

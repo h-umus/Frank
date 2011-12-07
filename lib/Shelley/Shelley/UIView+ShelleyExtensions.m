@@ -10,7 +10,7 @@
 
 MAKE_CATEGORIES_LOADABLE(UIView_ShelleyExtensions)
 
-BOOL substringMatch(NSString *actualString, NSString *expectedSubstring){	
+BOOL substringMatch(NSString *actualString, NSString *expectedSubstring){
     return actualString && ([actualString rangeOfString:expectedSubstring].location != NSNotFound);    
 }
 
@@ -40,12 +40,25 @@ BOOL substringMatch(NSString *actualString, NSString *expectedSubstring){
 
 @implementation UIScrollView (ShelleyExtensions)
 -(void) scrollDown:(int)offset {
-	[self setContentOffset:CGPointMake(0,offset) animated:NO];
+	[self setContentOffset:CGPointMake(0,offset) animated:YES];
 }
 
 -(void) scrollToBottom {
-	CGPoint bottomOffset = CGPointMake(0, [self contentSize].height);
+	CGPoint bottomOffset = CGPointMake(0, [self contentSize].height - [self frame].size.height);
 	[self setContentOffset: bottomOffset animated: YES];
+}
+
+-(void) scrollToPage:(int)page {
+    CGPoint pageOffset = CGPointMake(self.bounds.size.width * page, 0);
+    [self setContentOffset: pageOffset animated: YES];
+}
+
+-(void) scrollToNextPage {
+    [self scrollToPage:(int)(self.contentOffset.x / self.bounds.size.width) + 1];
+}
+
+-(void) scrollToPreviousPage {
+    [self scrollToPage:(int)(self.contentOffset.x / self.bounds.size.width) - 1];
 }
 
 @end

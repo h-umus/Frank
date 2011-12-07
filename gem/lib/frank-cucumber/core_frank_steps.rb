@@ -4,40 +4,19 @@ require 'rspec/expectations'
 
 # -- See -- #
 Then /^I wait to see "([^\"]*)"$/ do |expected_mark|
-  Timeout::timeout(WAIT_TIMEOUT) do
-    until view_with_mark_exists( expected_mark )
-      sleep 0.1
-    end
-  end
+    view_with_mark_exists( expected_mark )
 end
 
 Then /^I wait to not see "([^\"]*)"$/ do |expected_mark|
-  sleep 3
-  Timeout::timeout(WAIT_TIMEOUT) do
-    while element_exists( "view marked:'#{expected_mark}'" )
-      sleep 0.1
-    end
-  end
+    check_element_does_not_exist( "view marked:'#{expected_mark}'" )
 end
 
 Then /^I wait to see a navigation bar titled "([^\"]*)"$/ do |expected_mark|
-    Timeout::timeout(30) do
-      values = frankly_map( 'navigationItemView', 'accessibilityLabel' )
-      until values.include?(expected_mark)
-        values = frankly_map( 'navigationItemView', 'accessibilityLabel' )
-        sleep 0.1
-      end
-    end
+    check_element_exists( "navigationItemView marked:'#{expected_mark}'" )
 end
 
 Then /^I wait to not see a navigation bar titled "([^\"]*)"$/ do |expected_mark|
-    Timeout::timeout(30) do
-      values = frankly_map( 'navigationItemView', 'accessibilityLabel' )
-      while values.include?(expected_mark)
-        values = frankly_map( 'navigationItemView', 'accessibilityLabel' )
-        sleep 0.1
-      end
-    end
+    check_element_does_not_exist( "navigationItemView marked:'#{expected_mark}'" )
 end
 
 Then /^I should see a "([^\"]*)" button$/ do |expected_mark|
@@ -114,8 +93,8 @@ end
 # -- Type/Fill in -- #
 
 When /^I type "([^\"]*)" into the "([^\"]*)" text field$/ do |text_to_type, field_name|
-  text_fields_modified = frankly_map( "textField placeholder:'#{field_name}'", "setText:", text_to_type )
-  raise "could not find text fields with placeholder '#{field_name}'" if text_fields_modified.empty?
+  text_fields_modified = frankly_map( "textField marked:'#{field_name}'", "setText:", text_to_type )
+  raise "could not find text fields marked '#{field_name}'" if text_fields_modified.empty?
   #TODO raise warning if text_fields_modified.count > 1
 end
 
@@ -186,11 +165,9 @@ When /^I touch "([^\"]*)"$/ do |mark|
 end
 
 When /^I touch "([^\"]*)" if exists$/ do |mark|
-  sleep 1
   selector = "view marked:'#{mark}' first"
   if element_exists(selector)
   	touch(selector)
-    sleep 1
   end
 end
 
@@ -211,7 +188,6 @@ Then /I touch the following:/ do |table|
   values = frankly_map( 'view', 'accessibilityLabel' )
   table.raw.each do |expected_mark|
     touch( "view marked:'#{expected_mark}'" )
-    sleep 2
   end
 end
 
@@ -259,14 +235,13 @@ When /^I wait for ([\d\.]+) second(?:s)?$/ do |num_seconds|
 end
 
 Then /^a pop\-over menu is displayed with the following:$/ do |table|
-  sleep 1
   table.raw.each do |expected_mark|
     check_element_exists "actionSheet view marked:'#{expected_mark}'"
   end
 end
 
 Then /^I navigate back$/ do
-  touch( "navigationItemButtonView" )
+  touch( "navigationItemView" )
 end
 
 When /^I dump the DOM$/ do
