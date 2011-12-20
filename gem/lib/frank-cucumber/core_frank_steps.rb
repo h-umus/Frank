@@ -205,8 +205,8 @@ When /^I touch the (\d*)(?:st|nd|rd|th)? action sheet button$/ do |ordinal|
 end
 
 When /^I touch the (\d*)(?:st|nd|rd|th)? alert view button$/ do |ordinal|
-  ordinal = ordinal.to_i
-  touch( "alertView threePartButton tag:#{ordinal}" )
+  ordinal = ordinal.to_i - 1
+  touch( "view:'UIAlertView' view:'UIThreePartButton' index:#{ordinal}" )
 end
 
 # -- switch -- #
