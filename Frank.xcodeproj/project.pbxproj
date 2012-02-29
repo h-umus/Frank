@@ -933,6 +933,8 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*][arch=*]" = "/H-umus/iOS/Lib/Frank/lib/Shelley/build/Release-iphoneos";
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*][arch=*]" = "/H-umus/iOS/Lib/Frank/lib/Shelley/build/Release-iphonesimulator";
 				OTHER_LDFLAGS = "-ObjC";
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
